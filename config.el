@@ -25,7 +25,10 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
+(setq! doom-theme 'doom-one)
+;; (load-theme 'doom-homage-white)
+;; (load-theme 'doom-city-lights)
+;; (load-theme 'doom-homage-white)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -52,3 +55,22 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+
+(setq lsp-ui-doc-enable nil)
+(setq lsp-symbol-highlighting-skip-current t)
+(setq lsp-signature-render-documentation t)
+(setq lsp-signature-auto-activate t)
+
+
+(map! :desc "Navigate codebases using Enter and Delete"
+      :n
+      "<RET>" 'xref-find-definitions
+      )
+(map! :n "<DEL>" 'xref-pop-marker-stack)
+
+(custom-set-faces!
+  ;; Quiet down that highlighting
+  '(lsp-face-highlight-textual :underline nil)
+  )
+
+(setq! lsp-metals-super-method-lenses-enabled t)
