@@ -56,21 +56,39 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-(setq lsp-ui-doc-enable nil)
-(setq lsp-symbol-highlighting-skip-current t)
-(setq lsp-signature-render-documentation t)
-(setq lsp-signature-auto-activate t)
+(after! lsp-mode
+  (setq lsp-ui-doc-enable nil)
+  (setq lsp-symbol-highlighting-skip-current t)
+  (setq lsp-signature-render-documentation t)
+  (setq lsp-signature-auto-activate t)
+  (setq! lsp-metals-super-method-lenses-enabled t)
+  )
 
+;; Clear C-s
+(map! :after isearch
+      :map isearch-mode-map
+      [C-s] nil)
+
+(defun save-and-escape () (interactive) (save-buffer) (evil-escape))
 
 (map! :desc "Navigate codebases using Enter and Delete"
-      :n
-      "<RET>" 'xref-find-definitions
+      :n [return] 'xref-find-definitions
+      :n [delete] 'xref-pop-marker-stack
+      :n [tab] 'next-error
+      :i "C-s" 'save-and-escape
+      :n "C-s" 'save-buffer
       )
-(map! :n "<DEL>" 'xref-pop-marker-stack)
+
+(map! (:prefix ("," . "common")
+       :desc "Format buffer or region" :n [tab] '+format/region-or-buffer
+       :desc "Kill buffer"             :n "x" 'kill-buffer
+       :desc "Show quickdoc"           :n "d" '+lookup/documentation
+       (:when (featurep! :tools lsp)
+        (:map lsp-mode-map
+         :desc "Show signature"          :n "p" 'lsp-signature-activate
+         ))))
 
 (custom-set-faces!
   ;; Quiet down that highlighting
   '(lsp-face-highlight-textual :underline nil)
   )
-
-(setq! lsp-metals-super-method-lenses-enabled t)
