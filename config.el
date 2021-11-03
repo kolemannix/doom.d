@@ -62,6 +62,10 @@
   (setq lsp-signature-render-documentation t)
   (setq lsp-signature-auto-activate t)
   (setq! lsp-metals-super-method-lenses-enabled t)
+  (custom-set-faces!
+    ;; Quiet down that highlighting
+    '(lsp-face-highlight-textual :underline nil)
+    )
   )
 
 ;; Clear C-s
@@ -73,7 +77,7 @@
 
 (map! :desc "Navigate codebases using Enter and Delete"
       :n [return] 'xref-find-definitions
-      :n [delete] 'xref-pop-marker-stack
+      :n "<DEL>" 'xref-pop-marker-stack
       :n [tab] 'next-error
       :i "C-s" 'save-and-escape
       :n "C-s" 'save-buffer
@@ -85,10 +89,10 @@
        :desc "Show quickdoc"           :n "d" '+lookup/documentation
        (:when (featurep! :tools lsp)
         (:map lsp-mode-map
-         :desc "Show signature"          :n "p" 'lsp-signature-activate
-         ))))
-
-(custom-set-faces!
-  ;; Quiet down that highlighting
-  '(lsp-face-highlight-textual :underline nil)
-  )
+         :desc "Show signature"          :n "p" '+lookup/references
+         :desc "Find references"         :n "f" '+lookup/documentation
+         ))
+       (:when (featurep! :ui treemacs)
+        :desc "Toggle Treemacs"          :n "t" 'treemacs
+        )
+       ))
