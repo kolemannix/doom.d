@@ -83,14 +83,17 @@
       :n "C-s" 'save-buffer
       )
 
+(map! :leader
+      :desc "Magit push" "g p" #'magit-push)
+
 (map! (:prefix ("," . "common")
        :desc "Format buffer or region" :n [tab] '+format/region-or-buffer
        :desc "Kill buffer"             :n "x" 'kill-buffer
        :desc "Show quickdoc"           :n "d" '+lookup/documentation
        (:when (featurep! :tools lsp)
         (:map lsp-mode-map
-         :desc "Show signature"          :n "p" '+lookup/references
-         :desc "Find references"         :n "f" '+lookup/documentation
+         :desc "Show signature"          :n "p" 'lsp-signature-activate
+         :desc "Find references"         :n "f" '+lookup/references
          ))
        (:when (featurep! :ui treemacs)
         :desc "Toggle Treemacs"          :n "t" 'treemacs
